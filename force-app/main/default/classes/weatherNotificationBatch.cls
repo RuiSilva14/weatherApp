@@ -32,13 +32,7 @@ public class weatherNotificationBatch implements Database.Batchable<sObject>, Da
 
       weather.email = cityPreference.User__r.Email;
 
-      if (weather.temperature > 30) {
-        weather.comment = 'The temperature is too high';
-      } else if (weather.temperature < 10) {
-        weather.comment = 'The temperature is too low';
-      } else {
-        weather.comment = 'The temperature is just right';
-      }
+      weather.comment = getWeatherComment(weather.temperature);
 
       if (cityPreferencesMap.containsKey(cityPreference.User__c)) {
         cityPreferencesMap.get(cityPreference.User__c).add(weather);
@@ -75,9 +69,9 @@ public class weatherNotificationBatch implements Database.Batchable<sObject>, Da
           weather.city +
           ' is ' +
           String.valueOf(weather.temperature) +
-          ' degrees Celsius.' +
-          '\n\n' +
-          weather.comment;
+          ' degrees Celsius. ' +
+          weather.comment +
+          '\n\n';
       }
       email.setPlainTextBody(body);
       Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ email });
@@ -86,5 +80,14 @@ public class weatherNotificationBatch implements Database.Batchable<sObject>, Da
 
   public void finish(Database.BatchableContext bc) {
     System.debug('Finished');
+  }
+
+  private String getWeatherComment(Decimal temperature) {
+    if (temperature > 30) {
+      return 'It seems like a hot day today!';
+    } else if (temperature < 10) {
+      return 'It seems like a cold day today!';
+    }
+    return 'It seems like a nice day today!';
   }
 }
