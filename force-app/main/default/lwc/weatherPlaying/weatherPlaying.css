@@ -1,0 +1,14 @@
+.preference {
+  border: var(--lwc-borderWidthThin) solid #8d8c8c;
+  border-radius: var(--lwc-borderRadiusMedium);
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+}
+
+.city-name {
+  font-weight: var(--lwc-fontWeightBold);
+}

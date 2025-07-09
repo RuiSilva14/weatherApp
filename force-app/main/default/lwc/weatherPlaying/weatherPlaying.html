@@ -1,5 +1,60 @@
 <template>
-  <p>Current Weather: {weatherData.temperature}°C</p>
-  <p>Condition: {weatherData.conditionText}</p>
-  <img src={weatherData.icon} alt="Weather Icon" />
+  <template if:true={weatherReports}>
+    <lightning-datatable data={weatherReports} columns={columns} key-field="Id">
+    </lightning-datatable>
+  </template>
+  <template if:false={weatherReports}>
+    <p>No weather reports available for this account.</p>
+  </template>
+
+  <template if:true={cityPreferences}>
+    <h2 class="slds-text-heading_small slds-m-bottom_small">
+      City Preferences
+    </h2>
+
+    <div class="slds-grid slds-gutters slds-m-bottom_medium">
+      <div class="slds-col">
+        <lightning-input
+          type="text"
+          label="Add City"
+          value={newCity}
+          onchange={handleCityChange}
+        ></lightning-input>
+      </div>
+      <div class="slds-col slds-align-bottom">
+        <lightning-button
+          label="Add"
+          variant="brand"
+          onclick={addCityPreference}
+        ></lightning-button>
+      </div>
+    </div>
+
+    <div class="slds-grid slds-wrap">
+      <template for:each={cityPreferences} for:item="cityPreference">
+        <div
+          key={cityPreference.Id}
+          class="slds-box slds-box_xx-small slds-m-around_x-small slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3"
+        >
+          <div
+            class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center"
+          >
+            <span class="slds-text-title_bold">{cityPreference.City__c}</span>
+            <lightning-button-icon
+              icon-name="utility:close"
+              alternative-text="Remove"
+              variant="bare"
+              onclick={removeCityPreference}
+              data-id={cityPreference.Id}
+              class="slds-button_icon"
+            ></lightning-button-icon>
+          </div>
+        </div>
+      </template>
+    </div>
+  </template>
+
+  <template if:false={cityPreferences}>
+    <p>No city preferences available for this user.</p>
+  </template>
 </template>
